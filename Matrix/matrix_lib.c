@@ -16,35 +16,35 @@ int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
 
 int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r)
 {
-    float *pM1, *pM2, *pR, *plR, *pcR;
+    float *p_m1, *p_m2, *p_r, *p_l_r, *p_c_r;
 
-    pR = r->values;
+    p_r = r->values;
     for (int i = 0; i < r->cols * r->rows; i++)
     {
-        *pR = 0;
-        pR++;
+        *p_r = 0;
+        p_r++;
     }
     
-    pM1 = m1->values;
-    plR = r->values;
+    p_m1 = m1->values;
+    p_l_r = r->values;
     for (int i = 0; i < m1->rows; i++)
     {
-        pM2 = m2->values;
+        p_m2 = m2->values;
         
         for (int j = 0; j < m1->cols; j++)
         {
-            pcR = plR;
+            p_c_r = p_l_r;
             for (int k = 0; k < m2->cols; k++)
             {
-                *pcR += (*pM1) * (*pM2);
+                *p_c_r += (*p_m1) * (*p_m2);
                     
-                pcR++;
-                pM2++;
+                p_c_r++;
+                p_m2++;
             }
             
-            pM1++;
+            p_m1++;
         }
-        plR += r->cols;
+        p_l_r += r->cols;
     }
 
     return 0;
