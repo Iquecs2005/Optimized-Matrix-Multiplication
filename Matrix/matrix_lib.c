@@ -2,14 +2,16 @@
 
 int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
 {
-    for (int i = 0; i < r->rows; i++)
+    for (int i = 0; i < r->cols; i++)
     {
-        for (int j = 0; j < r->cols; j++)
+        for (int j = 0; j < r->rows; j++)
         {
-            int index = i * r->cols + j;
+            int index = j * r->cols + i;
             r->values[index] = scalar_value * m->values[index];
         }
     }
+
+    return 0;
 }
 
 int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r)
@@ -29,4 +31,6 @@ int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r)
             }
         }
     }
+
+    return 0;
 }
