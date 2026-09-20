@@ -1,7 +1,6 @@
 /**
  * Modulo com funcoes para multiplicar uma matriz por um escalar e uma matrix por outra
- * utilizando incremento de vetores e instrucoes vetoriais da biblioteca Intel Intrinsics
- * como forma de otimizacao
+ * utilizando percurso por linhas e incremento de vetores como forma de otimizacao
  */
 #include "matrix_lib.h"
 
