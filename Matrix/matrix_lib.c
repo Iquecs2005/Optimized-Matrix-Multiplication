@@ -1,19 +1,23 @@
 /**
  * Modulo com funcoes para multiplicar uma matriz por um escalar e uma matrix por outra
- * utilizando instrucoes vetoriais da biblioteca Intel Intrinsics como forma de otimizacao
+ * utilizando incremento de vetores e instrucoes vetoriais da biblioteca Intel Intrinsics
+ * como forma de otimizacao
  */
 #include "matrix_lib.h"
 
 /**
  * scalar_matrix_mult
  * 
- * Recebe um valor escalar e duas matrizes e armazena em uma das matrizes
- * o resultado da multiplicacao entre a outra matriz e o valor escalar
+ * Recebe um valor escalar e duas matrizes, 1 de entrada e uma de saída. 
+ * Armazena na matriz 'r' o resultado da multiplicacao entre a outra matriz
+ * e o valor escalar.
  * 
  * @param scalar_value valor escalar em float
- * @param m ponteiro para estrutura que representa a matriz a ser multiplicada
- * @param r ponteiro para estrutura que representa a matriz de resposta da multiplicacao
- * @return 0
+ * @param m ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a matriz a ser multiplicada
+ * @param r ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a matriz de resposta da multiplicacao
+ * @return A matriz resultado no parametro 'r' e 0 quando não encontra nenhum erro
  */
 int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
 {
@@ -32,13 +36,15 @@ int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
 /**
  * matrix_matrix_mult
  * 
- * Recebe três matrizes e armazena em uma delas 
- * o resultado da multiplicacao das outras duas
+ * Recebe três matrizes inicializadas, 2 de entrada e uma de saída. 
+ * Retorna na matriz 'r' o resultado da multiplicacao entre das outras duas.
  * 
- * @param m1 ponteiro para estrutura que representa a primeira matriz a ser multiplicada
- * @param m2 ponteiro para estrutura que representa a segunda matriz a ser multiplicada
+ * @param m1 ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a primeira matriz a ser multiplicada
+ * @param m2 ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a segunda matriz a ser multiplicada
  * @param r ponteiro para estrutura que representa a matriz de resposta da multiplicacao
- * @return 0
+ * @return A matriz resultado no parametro 'r' e 0 quando não encontra nenhum erro
  */
 int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r)
 {
