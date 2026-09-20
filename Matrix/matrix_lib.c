@@ -5,7 +5,6 @@
  */
 #include "matrix_lib.h"
 
-#include <stdio.h>
 #include <immintrin.h>
 
 /**
