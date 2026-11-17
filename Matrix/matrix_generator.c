@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+typedef float matrix_type;
+
 //argv[1] = file name
 //argv[2] = nNumbers
 
@@ -30,8 +32,8 @@ int main(int argc, char *argv[])
 
     char* fileName = argv[1];
     int nNumbers = atoi(argv[2]);
-    double a = 5;
-    char random = 0;
+    matrix_type a = 5;
+    char random = 1;
 
     if (argc >= 4)
     {
@@ -49,13 +51,13 @@ int main(int argc, char *argv[])
         exit(2);
     }
 
-    double n = 0;
+    matrix_type n = 0;
     for (int i = 0; i < nNumbers; i++)
     {
-        n = (double)i;
+        n = (matrix_type)i;
         if (random)
         {
-            n = a * ((double)rand()/(double)RAND_MAX);
+            n = a * ((matrix_type)rand()/(matrix_type)RAND_MAX);
         }
 
         //printf("%lf\n", n);
