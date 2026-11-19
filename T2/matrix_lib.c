@@ -8,9 +8,9 @@
 #define N_THREADS 16
 
 typedef struct {
-    Matrix *m1;
-    Matrix *m2;
-    Matrix *r;
+    matrix *m1;
+    matrix *m2;
+    matrix *r;
     float scalar_value;
     int thread_id;
 } pthread_args;
@@ -73,8 +73,8 @@ void *matrix_worker(void *args)
     matrix* c = thread_args->r;
 
     thread_id = thread_args->thread_id;
-    qtd_linhas = thread_args->r->nLines / N_THREADS;
-    sobraram = thread_args->r->nLines % N_THREADS;
+    qtd_linhas = thread_args->r->rows / N_THREADS;
+    sobraram = thread_args->r->rows % N_THREADS;
 
     //multiplica linhas
 
@@ -88,20 +88,34 @@ void *matrix_worker(void *args)
         linha = qtd_linhas * thread_id + sobraram;
     }
 
-    for (int i = linha; i < linha + qtd_linhas; i++)
-    {
-        for (int j = 0; j < c->nCollumns; j++)
-        {
-            int cIndex = i * c->nCollumns + j;
-            c->matrixData[cIndex] = 0;
-            for (int k = 0; k < a->nCollumns; k++)
-            {
-                int aIndex = i * a->nCollumns + k;
-                int bIndex = k * b->nCollumns + j;
+    float *pA, *pB, *pC;
 
-                c->matrixData[cIndex] += a->matrixData[aIndex] * b->matrixData[bIndex];
+    pA = a->values + linha * a->cols;
+    pC = c->values + linha * c->cols;
+
+    for (int l = 0; l < qtd_linhas; l++)
+    {
+        for (int j = 0; j < c->cols; j++)
+        {
+            float soma = 0;
+
+            pB = b->values + j;
+
+            for (int k = 0; k < a->cols; k++)
+            {
+                soma += (*pA) * (*pB);
+
+                pA++;
+                pB += b->cols;
             }
+
+            *pC = soma;
+            pC++;
+
+            pA -= a->cols;
         }
+
+        pA += a->cols;
     }
     return NULL;
 }
@@ -156,13 +170,13 @@ void *scalar_worker(void *args)
     int sobraram;
     int linha;
 
-    Matrix *m = thread_args->m1;
-    Matrix *r = thread_args->r;
+    matrix *m = thread_args->m1;
+    matrix *r = thread_args->r;
     float scalar_value = thread_args->scalar_value;
 
     thread_id = thread_args->thread_id;
-    qtd_linhas = thread_args->r->nLines / N_THREADS;
-    sobraram = thread_args->r->nLines % N_THREADS;
+    qtd_linhas = thread_args->r->rows / N_THREADS;
+    sobraram = thread_args->r->rows % N_THREADS;
 
 
     if (thread_id < sobraram)
@@ -177,10 +191,10 @@ void *scalar_worker(void *args)
 
     for (int i = linha; i < linha + qtd_linhas; i++)
     {
-        for (int j = 0; j < m->nCollumns; j++)
+        for (int j = 0; j < m->cols; j++)
         {
-            int index = i * m->nCollumns + j;
-            r->matrixData[index] = scalar_value * m->matrixData[index];
+            int index = i * m->cols + j;
+            r->values[index] = scalar_value * m->values[index];
         }
     }
     return NULL;
