@@ -9,6 +9,7 @@ Build Instructions:
 
 -   Main Program: "gcc -Wall -std=c11 -mfma -o matrix_lib_test matrix_lib_test.c matrix_lib.c"
 -   Matrix Generator: "gcc -o matrix_generator matrix_generator.c"
+-   T2 Threads: "gcc -Wall -std=c11 -mfma -o matrix_lib_test T2/matrix_lib.c"
 
 Resultados:
 
