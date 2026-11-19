@@ -10,14 +10,8 @@ typedef struct {
 	float *d_values;
 } matrix;
 
-typedef struct
-{
-    int nLines, nCollumns;
-    double *matrixData;
-} Matrix;
-
-int scalar_matrix_mult(float scalar_value, Matrix *m, Matrix *r);
-int matrix_matrix_mult(Matrix *m1, Matrix *m2, Matrix *r);
+int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r);
+int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r);
 int load_matrix(matrix *matrix, char *filename);
 int store_matrix(matrix *matrix, char *filename);
 void usage(const char *name);
