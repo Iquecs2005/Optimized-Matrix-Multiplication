@@ -7,9 +7,14 @@ Error Codes:
 
 Build Instructions:
 
--   Main Program: "gcc -Wall -std=c11 -mfma -o matrix_lib_test matrix_lib_test.c matrix_lib.c"
+-   GPU: "nvcc -o matrix_lib_test T2/matrix_lib_test.cu T2/matrix_lib.cu"
+-   Execution example: "./matrix_lib_test -s 5.0 -r 256 -c 256 -C 256 
+-m Matrix/matrix256x256 -M Matrix/matrix256x256 -o Matrix/result1.dat -O Matrix/result2.dat -t 256 -b 4096"
+
+-   Threads: "gcc -o matrix_lib_thread_test Threads/matrix_lib.h Threads/matrix_lib_test.c Threads/matrix_lib.c"
+-   Execution example: "./matrix_lib_thread_test -s 5.0 -r 256 -c 256 -C 256 -m Matrix matrix256x256 -M Matrix/matrix256x256 -o Matrix/result1.dat -O Matrix/result2.dat"
+
 -   Matrix Generator: "gcc -o matrix_generator matrix_generator.c"
--   T2 Threads: "gcc -Wall -std=c11 -mfma -o matrix_lib_test T2/matrix_lib.c"
 
 Resultados:
 

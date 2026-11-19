@@ -10,7 +10,6 @@
 #include <getopt.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/time.h>
 #include <math.h>
 
 #include "matrix_lib.h"
