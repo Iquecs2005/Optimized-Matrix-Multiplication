@@ -68,7 +68,7 @@ int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
  * matrix_matrix_mult
  * 
  * Recebe três matrizes inicializadas, 2 de entrada e uma de saída. 
- * Retorna na matriz 'r' o resultado da multiplicacao entre das outras duas.
+ * Retorna na matriz 'r' o resultado da multiplicacao entre as outras duas.
  * A funcao e executada no host e chama a funcao matrix_mult_worker no device
  * 
  * @param m1 ponteiro para estrutura inicializada do tipo 'matrix'
@@ -137,8 +137,8 @@ int allocate_matrix_device(float** mD, unsigned long size)
 /**
  * transfer_matrix
  * 
- * Recebe dois ponteiros para floats que representam as matrizes e o tamanho da matriz
- * recebe tambem a direcao da operacao (host / device). 
+ * Recebe dois ponteiros para floats, que representam as matrizes, o tamanho da matriz
+ * e a direcao da operacao (host / device). 
  * A funcao copia os dados da primeira matriz para a segunda
  * 
  * @param origin vetor de floats que representa a matriz de origem
@@ -208,9 +208,11 @@ __global__ void scalar_mult_worker(unsigned long size,
  * que representa a segunda matriz a ser multiplicada
  * @param r ponteiro para vetor de floats
  * que representa a matriz de resposta da multiplicacao
- * @param dim_1 tamanho da primeira matriz a ser multiplicada
- * @param dim_2 tamanho da segunda matriz a ser multiplicada
- * @param dim_1 tamanho da matriz de resposta
+ * @param dim_1 o numero de linhas da primeira matriz a ser multiplicada e da matriz
+ * resultado
+ * @param dim_2 o numero de colunas da primeira matriz e linhas da segunda matriz
+ * a ser multiplicada
+ * @param dim_3 o numero de colunas da segunda matriz e da matriz resultado
  */
 __global__ void matrix_mult_worker(float* m1,
                                    float* m2,
