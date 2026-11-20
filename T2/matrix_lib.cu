@@ -1,3 +1,11 @@
+/**
+ * Modulo com funcoes para multiplicar uma matriz por um escalar e uma matrix por outra
+ * utilizando incremento de vetores, threads e a GPU Nvidia como forma de otimizacao
+ *
+ * Codigos de erro:
+ * - 3: erro na alocacao da matriz no device
+ * - 4: erro ao transferir a matriz
+ */
 #include "matrix_lib.h"
 
 #include <stdio.h>
@@ -16,7 +24,21 @@ __global__ void matrix_mult_worker(float* m1,
                                    unsigned long dim_2,
                                    unsigned long dim_3);
 
-
+/**
+ * scalar_matrix_mult
+ * 
+ * Recebe um valor escalar e duas matrizes, 1 de entrada e uma de saída. 
+ * Armazena na matriz 'r' o resultado da multiplicacao entre a outra matriz
+ * e o valor escalar. A funcao e executada no host
+ * e chama a funcao scalar_mult_worker no device
+ * 
+ * @param scalar_value valor escalar em float
+ * @param m ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a matriz a ser multiplicada
+ * @param r ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a matriz de resposta da multiplicacao
+ * @return A matriz resultado no parametro 'r' e 0 quando não encontra nenhum erro
+ */
 int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
 {
     float* dm, *dr;
@@ -42,6 +64,20 @@ int scalar_matrix_mult(float scalar_value, matrix *m, matrix *r)
     return 0;
 }
 
+/**
+ * matrix_matrix_mult
+ * 
+ * Recebe três matrizes inicializadas, 2 de entrada e uma de saída. 
+ * Retorna na matriz 'r' o resultado da multiplicacao entre das outras duas.
+ * A funcao e executada no host e chama a funcao matrix_mult_worker no device
+ * 
+ * @param m1 ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a primeira matriz a ser multiplicada
+ * @param m2 ponteiro para estrutura inicializada do tipo 'matrix'
+ * que representa a segunda matriz a ser multiplicada
+ * @param r ponteiro para estrutura que representa a matriz de resposta da multiplicacao
+ * @return A matriz resultado no parametro 'r' e 0 quando não encontra nenhum erro
+ */
 int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r)
 {
     float* dm1, *dm2, *dr;
@@ -76,6 +112,16 @@ int matrix_matrix_mult(matrix *m1, matrix *m2, matrix *r)
     return 0;
 }
 
+/**
+ * allocate_matrix_device
+ * 
+ * Recebe o endereco para um vetor de floats que representa a matriz no device 
+ * e o tamanho da matriz. A funcao aloca o espaco de memoria para esse vetor
+ * 
+ * @param mD ponteiro para vetor de floats que representa a matriz no device
+ * @param size tamanho da matriz que sera usado para alocar a memoria necessaria
+ * @return 0 quando não encontra nenhum erro e 3 quando ocorre erro na alocacao
+ */
 int allocate_matrix_device(float** mD, unsigned long size)
 {
     cudaError_t error = cudaMalloc(mD, size * sizeof(float));
@@ -88,6 +134,19 @@ int allocate_matrix_device(float** mD, unsigned long size)
     return 0;
 }
 
+/**
+ * transfer_matrix
+ * 
+ * Recebe dois ponteiros para floats que representam as matrizes e o tamanho da matriz
+ * recebe tambem a direcao da operacao (host / device). 
+ * A funcao copia os dados da primeira matriz para a segunda
+ * 
+ * @param origin vetor de floats que representa a matriz de origem
+ * @param destination vetor de floats que representa a matriz de destino
+ * @param size tamanho das matrizes que estao sendo transferidas
+ * @param dir direcao da operação (device para host ou host para device)
+ * @return 0 quando não encontra nenhum erro e 4 quando ocorre erro na transferencia
+ */
 int transfer_matrix(float* origin, float* destination, unsigned long size, cudaMemcpyKind dir)
 {
     cudaError_t error = cudaMemcpy(destination, origin, size * sizeof(float), dir);
@@ -99,6 +158,20 @@ int transfer_matrix(float* origin, float* destination, unsigned long size, cudaM
     return 0;
 }
 
+/**
+ * scalar_mult_worker
+ * 
+ * Funcao de auxilio executada no device nas threads da funcao scalar_matrix_mult.
+ * A funcao realiza a multiplicacao da matriz por escalar por threads,
+ * com cada thread cuidando dos elementos referentes ao seu ID (com offset baseado no ID)
+ * 
+ * @param size tamanho da matriz a ser multiplicada
+ * @param scalar_value valor escalar em float
+ * @param inputMatrix ponteiro para vetor de floats
+ * que representa a matriz a ser multiplicada
+ * @param resultMatrix ponteiro para vetor de floats
+ * que representa a matriz de resposta da multiplicacao
+ */
 __global__ void scalar_mult_worker(unsigned long size,
                                    float scalar_value,
                                    float* inputMatrix,
@@ -122,6 +195,23 @@ __global__ void scalar_mult_worker(unsigned long size,
     }
 }
 
+/**
+ * matrix_mult_worker
+ * 
+ * Funcao de auxilio executada no device nas threads da funcao matrix_matrix_mult.
+ * A funcao realiza a multiplicacao entre matrizes por threads,
+ * com cada thread cuidando dos elementos referentes ao seu ID (com offset baseado no ID)
+ * 
+ * @param m1 ponteiro para vetor de floats
+ * que representa a primeira matriz a ser multiplicada
+ * @param m2 ponteiro para vetor de floats
+ * que representa a segunda matriz a ser multiplicada
+ * @param r ponteiro para vetor de floats
+ * que representa a matriz de resposta da multiplicacao
+ * @param dim_1 tamanho da primeira matriz a ser multiplicada
+ * @param dim_2 tamanho da segunda matriz a ser multiplicada
+ * @param dim_1 tamanho da matriz de resposta
+ */
 __global__ void matrix_mult_worker(float* m1,
                                    float* m2,
                                    float* r,
